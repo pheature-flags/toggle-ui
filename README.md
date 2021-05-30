@@ -2,12 +2,26 @@
 
 Pheature flags Web Component based Admin UI implementation
 
+![Admin dashboard](images/web-component-admin.png)
+
+## Requirements
+
+* yarn
+
 ## Installation
 
 This is an experimental feature, you should clone it from git.
 
 ```bash
-git clone 
+git clone git@github.com:pheature-flags/toggle-ui.git
+```
+
+## Usage
+
+See [the html index](index.html) file.
+
+```html
+<toggle-list api-url="http://127.0.0.1:3000"></toggle-list>
 ```
 
 ## Contributing
