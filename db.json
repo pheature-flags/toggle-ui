@@ -1,0 +1,63 @@
+{
+  "features": [
+    {
+      "id": "test_toggle",
+      "strategies": [],
+      "enabled": false
+    },
+    {
+      "id": "admin_dashboard",
+      "strategies": [],
+      "enabled": true
+    },
+    {
+      "id": "show_contact_info",
+      "strategies": [],
+      "enabled": true
+    },
+    {
+      "id": "show_home_dynamic_catalog",
+      "strategies": [
+        {
+          "type": "enable_by_matching_segment",
+          "segments": [
+            {
+              "id": "is_developer",
+              "criteria": [
+                "developer"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "enable_by_matching_segment",
+          "segments": [
+            {
+              "id": "barcelona",
+              "criteria": {
+                "location": "barcelona"
+              }
+            },
+            {
+              "id": "bilbo",
+              "criteria": {
+                "location": "bilbo"
+              }
+            }
+          ]
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "show_commercial_name",
+      "strategies": [],
+      "enabled": true
+    },
+    {
+      "id": "show_brand_logo",
+      "strategies": [],
+      "enabled": true
+    }
+  ]
+}
