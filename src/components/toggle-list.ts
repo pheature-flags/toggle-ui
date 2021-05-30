@@ -168,7 +168,10 @@ export class ToggleList extends LitElement {
                             <th class="mdc-data-table__header-cell" role="columnheader">Feature ID</th>
                             <th class="mdc-data-table__header-cell" role="columnheader">Kill Switch</th>
                             <th class="mdc-data-table__header-cell actions" role="columnheader" colspan="2">
-                                <toggle-add @state_changed="${this.updateFeatures}"></toggle-add>
+                                <toggle-add
+                                        api-url="${this.apiUrl}"
+                                        @state_changed="${this.updateFeatures}"
+                                ></toggle-add>
                             </th>
                         </tr>
                         </thead>
