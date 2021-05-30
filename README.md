@@ -14,6 +14,11 @@ This is an experimental feature, you should clone it from git.
 
 ```bash
 git clone git@github.com:pheature-flags/toggle-ui.git
+cd tçggle-ui
+yarn 
+yarn start
+# open other terminal
+yarn dev-api
 ```
 
 ## Usage
