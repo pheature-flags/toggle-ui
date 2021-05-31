@@ -28,7 +28,7 @@
     "test": "jest",
     "lint": "eslint \\\"src/**/*.ts\\\" -c .eslintrc.json",
     "start": "yarn run build-css; webpack serve  --config webpack.dev.js",
-    "dev-api": "json-server --watch db.json;",
+    "dev-api": "json-server --middlewares ./middleware.js --watch db.json",
     "clean": "rm -rf dist || true; rm -f styles/index.css*;",
     "watch-css": "sass --watch styles/admin.scss dist/toggle-ui.css",
     "build-css": "dart-sass --load-path=node_modules styles/admin.scss dist/toggle-ui.css;",

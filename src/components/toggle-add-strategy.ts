@@ -63,18 +63,12 @@ export class ToggleAddStrategy extends LitElement {
             if (null === this.shadowRoot) {
                 return
             }
-            const segmentIdInput = (this.shadowRoot.getElementById(
+            const segmentIdInput: HTMLInputElement = (this.shadowRoot.getElementById(
                 'segment-id-text-field-' + segment.index
             ) as HTMLInputElement);
-            if (null === segmentIdInput) {
-                return
-            }
-            const segmentTypeSelect = (this.shadowRoot.getElementById(
+            const segmentTypeSelect: HTMLSelectElement = (this.shadowRoot.getElementById(
                 'segment-type-select-field-' + segment.index
             ) as HTMLSelectElement);
-            if (null === segmentTypeSelect) {
-                return
-            }
 
             return {
                 segment_id: segmentIdInput.value,

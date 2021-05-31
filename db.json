@@ -1,11 +1,6 @@
 {
   "features": [
     {
-      "id": "test_toggle",
-      "strategies": [],
-      "enabled": false
-    },
-    {
       "id": "admin_dashboard",
       "strategies": [],
       "enabled": true

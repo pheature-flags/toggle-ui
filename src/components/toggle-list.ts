@@ -11,7 +11,7 @@ import './toggle-remove-strategy.ts'
 import './toggle-segment.ts'
 import './toggle-switch.ts'
 import {MDCDataTable} from '@material/data-table';
-import {Feature, Segment, Strategy} from '../model/model'
+import {Feature, Strategy} from '../model/model'
 
 import {css, html, LitElement} from 'lit';
 import {customElement, property, query} from 'lit/decorators.js';
@@ -53,8 +53,6 @@ export class ToggleList extends LitElement {
     }
 
     private async updateFeatures() {
-        console.log('event fired!!')
-
         await this.getModel()
         await this.requestUpdate();
         return await this.updateComplete;
@@ -65,15 +63,7 @@ export class ToggleList extends LitElement {
             .then(data => data.json())
             .then((json) => {
                 this.features = []
-                return json.map((feature: any) => {
-                    return this.features.push(new Feature(feature.id, feature.enabled, feature.strategies.map(
-                        (strategy: any) => {
-                            return new Strategy(strategy.id, strategy.type, strategy.segments.map((segment: any) => {
-                                return new Segment(segment.id, segment.type, segment.criteria)
-                            }))
-                        }
-                    )));
-                })
+                return json.map((feature: Feature) => this.features.push(feature))
             });
     }
 
