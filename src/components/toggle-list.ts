@@ -4,21 +4,22 @@ import '@material/mwc-textfield';
 import '@material/mwc-select';
 import '@material/mwc-formfield';
 import '@material/mwc-switch';
-import './toggle-add.ts'
-import './toggle-add-strategy.ts'
-import './toggle-remove.ts'
-import './toggle-remove-strategy.ts'
-import './toggle-segment.ts'
-import './toggle-switch.ts'
-import {MDCDataTable} from '@material/data-table';
-import {Feature, Strategy} from '../model/model'
+import './toggle-add';
+import './toggle-add-strategy';
+import './toggle-remove';
+import './toggle-remove-strategy';
+import './toggle-segment';
+import './toggle-switch';
+import { MDCDataTable } from '@material/data-table';
 
-import {css, html, LitElement} from 'lit';
-import {customElement, property, query} from 'lit/decorators.js';
+import { css, html, LitElement } from 'lit';
+import { customElement, property, query } from 'lit/decorators.js';
+import { Feature } from '../model/feature';
+import { Strategy } from '../model/strategy';
 
 @customElement('toggle-list')
 export class ToggleList extends LitElement {
-    static styles = css`
+  static styles = css`
         .mdc-data-table {
            width: 100%;
         }
@@ -31,45 +32,47 @@ export class ToggleList extends LitElement {
 
     `;
 
-    @property()
-    features!: Array<Feature>;
-    @property({ attribute: 'api-url' })
-    apiUrl: string;
+  @property()
+  features!: Array<Feature>;
 
-    @query('.mdc-data-table')
-    dataTable!: HTMLTableElement
+  table?: MDCDataTable;
 
-    constructor() {
-        super();
-        this.apiUrl = '';
-        this.addEventListener('load', () => {
-            new MDCDataTable(this.dataTable)
-        });
-    }
+  @property({ attribute: 'api-url' })
+  apiUrl: string;
 
-    connectedCallback() {
-        super.connectedCallback();
-        this.getModel();
-    }
+  @query('.mdc-data-table')
+  dataTable!: HTMLTableElement;
 
-    private async updateFeatures() {
-        await this.getModel()
-        await this.requestUpdate();
-        return await this.updateComplete;
-    }
+  constructor() {
+    super();
+    this.apiUrl = '';
+    this.addEventListener('load', () => {
+      this.table = new MDCDataTable(this.dataTable);
+    });
+  }
 
-    private getModel() {
-        return fetch(this.apiUrl + '/features')
-            .then(data => data.json())
-            .then((json) => {
-                this.features = []
-                return json.map((feature: Feature) => this.features.push(feature))
-            });
-    }
+  connectedCallback() {
+    super.connectedCallback();
+    this.getModel();
+  }
 
-    private renderStrategies(feature: Feature) {
-        return html`
-            ${0 < feature.strategies.length ? html`
+  private async updateFeatures() {
+    await this.getModel();
+    return this.updateComplete;
+  }
+
+  private getModel() {
+    return fetch(`${this.apiUrl}/features`)
+      .then((data) => data.json())
+      .then((json) => {
+        this.features = [];
+        return json.map((feature: Feature) => this.features.push(feature));
+      });
+  }
+
+  private renderStrategies(feature: Feature) {
+    return html`
+            ${feature.strategies.length > 0 ? html`
                 <tr class="mdc-data-table__header-row bg-grey">
                     <th class="mdc-data-table__header-cell" scope="row"></th>
                     <th class="mdc-data-table__header-cell">Strategy</th>
@@ -79,20 +82,17 @@ export class ToggleList extends LitElement {
                 </tr>
             ` : html``}
             ${feature.strategies.map(
-                    (strategy: Strategy) => {
-                        return html`
+    (strategy: Strategy) => html`
                             <tr class="mdc-data-table__row">
                                 <td class="mdc-data-table__cell" scope="row"></td>
                                 <td class="mdc-data-table__cell">${strategy.id}</td>
                                 <td class="mdc-data-table__cell">${strategy.type}</td>
                                 <td class="mdc-data-table__cell">
-                                    ${strategy.segments.map((segment) => {
-                                        return html`
+                                    ${strategy.segments.map((segment) => html`
                                             <toggle-segment 
                                                     segment-id="${segment.id}"
                                             ></toggle-segment>
-                                        `
-                                    })}
+                                        `)}
                                 </td>
                                 <td class="mdc-data-table__cell actions">
                                     <toggle-remove-strategy
@@ -103,18 +103,16 @@ export class ToggleList extends LitElement {
                                     ></toggle-remove-strategy>
                                 </td>
                             </tr>
-                        `
-                    }
-            )}
+                        `,
+  )}
 
-        `
-    }
+        `;
+  }
 
-    private renderRows() {
-        return html`
+  private renderRows() {
+    return html`
             ${this.features.map(
-                    (feature: Feature) => {
-                        return html`
+    (feature: Feature) => html`
                             <tr class="mdc-data-table__row">
                                 <td class="mdc-data-table__cell" scope="row"></td>
                                 <td class="mdc-data-table__cell">${feature.id}</td>
@@ -139,14 +137,13 @@ export class ToggleList extends LitElement {
                                 </td>
                             </tr>
                             ${this.renderStrategies(feature)}
-                        `
-                    }
-            )}
-        `
-    }
+                        `,
+  )}
+        `;
+  }
 
-    render() {
-        return html`
+  render() {
+    return html`
             <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css"
                   rel="stylesheet">
             <div class="mdc-data-table">
@@ -172,5 +169,5 @@ export class ToggleList extends LitElement {
                 </div>
             </div>
         `;
-    }
+  }
 }

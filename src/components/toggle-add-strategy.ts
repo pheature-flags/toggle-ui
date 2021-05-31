@@ -1,9 +1,9 @@
-import {css, html, LitElement} from 'lit';
-import {customElement, property, query} from 'lit/decorators.js';
+import { css, html, LitElement } from 'lit';
+import { customElement, property, query } from 'lit/decorators.js';
 
 @customElement('toggle-add-strategy')
 export class ToggleAddStrategy extends LitElement {
-    static styles = css`
+  static styles = css`
         mwc-textfield, mwc-select {
            min-width: 500px;
            margin-bottom: 32px;
@@ -14,98 +14,95 @@ export class ToggleAddStrategy extends LitElement {
         }
     `;
 
-    @property({attribute: 'api-url'})
-    apiUrl: string;
-    @property({type: String})
-    featureId: String
-    @property({type: Array})
-    segments: Array<any>
+  @property({ attribute: 'api-url' })
+  apiUrl: string;
 
-    @query('#add-strategy-dialog')
-    dialog!: HTMLDialogElement
-    @query('#strategy-id-text-field')
-    strategyIdInput!: HTMLInputElement
-    @query('#strategy-type-select-field')
-    strategyTypeInput!: HTMLSelectElement
-    @query('#segment-form-template')
-    formTemplate!: HTMLDivElement
-    @query('#segment-forms-wrapper')
-    formsWrapper!: HTMLDivElement
-    @query('.segment-form')
-    forms!: HTMLDivElement
+  @property({ type: String })
+  featureId: String;
 
-    constructor() {
-        super();
-        this.apiUrl = ''
-        this.featureId = ''
-        this.segments = []
-    }
+  @property({ type: Array })
+  segments: Array<any>;
 
-    private openAddStrategyForm() {
-        this.dialog.open = true;
-    }
+  @query('#add-strategy-dialog')
+  dialog!: HTMLDialogElement;
 
-    private showNewSegmentForm() {
-        this.segments.push({
-            id: '',
-            type: '',
-            index: this.segments.length + 1
-        })
-        this.requestUpdate()
-    }
+  @query('#strategy-id-text-field')
+  strategyIdInput!: HTMLInputElement;
 
-    private async addStrategy() {
-        await this.save()
-    }
+  @query('#strategy-type-select-field')
+  strategyTypeInput!: HTMLSelectElement;
 
-    private save() {
-        const segments = this.segments.map((segment) => {
-            if (null === this.shadowRoot) {
-                return
-            }
-            const segmentIdInput: HTMLInputElement = (this.shadowRoot.getElementById(
-                'segment-id-text-field-' + segment.index
-            ) as HTMLInputElement);
-            const segmentTypeSelect: HTMLSelectElement = (this.shadowRoot.getElementById(
-                'segment-type-select-field-' + segment.index
-            ) as HTMLSelectElement);
+  constructor() {
+    super();
+    this.apiUrl = '';
+    this.featureId = '';
+    this.segments = [];
+  }
 
-            return {
-                segment_id: segmentIdInput.value,
-                segment_type: segmentTypeSelect.value,
-                criteria: [],
-            }
-        });
+  private openAddStrategyForm() {
+    this.dialog.open = true;
+  }
 
-        return fetch(this.apiUrl + '/features/' + this.featureId, {
-            method: 'PATCH',
-            headers: {
-                'content-type': 'application/json',
-            },
-            body: JSON.stringify({
-                action: 'set_strategy',
-                value: {
-                    strategy_id: this.strategyIdInput.value,
-                    strategy_type: this.strategyTypeInput.value,
-                    segments: segments
-                }
-            }),
-        }).then(response => {
-            if (202 === response.status) {
-                this.strategyIdInput.value = ''
-                this.strategyTypeInput.value = ''
-                this.segments = []
-                const event = new Event('state_changed')
-                this.dispatchEvent(event)
-                this.dialog.open = false;
-            }
-        })
-    }
+  private showNewSegmentForm() {
+    this.segments.push({
+      id: '',
+      type: '',
+      index: this.segments.length + 1,
+    });
+    this.requestUpdate();
+  }
 
-    renderSegmentForm() {
-        if (0 < this.segments.length) {
-            return this.segments.map((segment) => {
-                return html`
+  private async addStrategy() {
+    await this.save();
+  }
+
+  private save() {
+    const segments = this.segments.map((segment) => {
+      if (this.shadowRoot === null) {
+        return {};
+      }
+      const segmentIdInput: HTMLInputElement = (this.shadowRoot.getElementById(
+        `segment-id-text-field-${segment.index}`,
+      ) as HTMLInputElement);
+      const segmentTypeSelect: HTMLSelectElement = (this.shadowRoot.getElementById(
+        `segment-type-select-field-${segment.index}`,
+      ) as HTMLSelectElement);
+
+      return {
+        segment_id: segmentIdInput.value,
+        segment_type: segmentTypeSelect.value,
+        criteria: [],
+      };
+    });
+
+    return fetch(`${this.apiUrl}/features/${this.featureId}`, {
+      method: 'PATCH',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        action: 'set_strategy',
+        value: {
+          strategy_id: this.strategyIdInput.value,
+          strategy_type: this.strategyTypeInput.value,
+          segments,
+        },
+      }),
+    }).then((response) => {
+      if (response.status === 202) {
+        this.strategyIdInput.value = '';
+        this.strategyTypeInput.value = '';
+        this.segments = [];
+        const event = new Event('state_changed');
+        this.dispatchEvent(event);
+        this.dialog.open = false;
+      }
+    });
+  }
+
+  renderSegmentForm() {
+    if (this.segments.length > 0) {
+      return this.segments.map((segment) => html`
                     <div class="segment-form">
                         <p>Segment ${segment.index}</p>
                         <mwc-textfield
@@ -130,15 +127,13 @@ export class ToggleAddStrategy extends LitElement {
                         </mwc-select>
                         <br/>
                     </div>
-                `
-            })
-        } else {
-            return html``
-        }
+                `);
     }
+    return html``;
+  }
 
-    render() {
-        return html`
+  render() {
+    return html`
             <mwc-button @click="${this.openAddStrategyForm}">Add Strategy</mwc-button>
             <mwc-dialog id="add-strategy-dialog" heading="Add Toggle Strategy" class="styled">
                 <mwc-textfield
@@ -166,6 +161,6 @@ export class ToggleAddStrategy extends LitElement {
                 <mwc-button slot="primaryAction" @click="${this.addStrategy}">Save Strategy</mwc-button>
                 <mwc-button slot="secondaryAction" dialogAction="close">Cancel</mwc-button>
             </mwc-dialog>
-        `
-    }
+        `;
+  }
 }

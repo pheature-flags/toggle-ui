@@ -1,9 +1,9 @@
-import {css, html, LitElement} from 'lit';
-import {customElement, property, query} from 'lit/decorators.js';
+import { css, html, LitElement } from 'lit';
+import { customElement, property, query } from 'lit/decorators.js';
 
 @customElement('toggle-remove-strategy')
 export class ToggleRemoveStrategy extends LitElement {
-    static styles = css`
+  static styles = css`
         mwc-button {
            --mdc-theme-primary: red;
         }
@@ -16,57 +16,61 @@ export class ToggleRemoveStrategy extends LitElement {
            margin-bottom: 32px;
         }
     `;
-    @property({attribute: 'feature-id'})
-    featureId: string
-    @property({attribute: 'strategy-id'})
-    strategyId: string
-    @property({ attribute: 'api-url' })
-    apiUrl: string;
-    @query('#remove-toggle-dialog')
-    dialog!: HTMLDialogElement
 
-    constructor() {
-        super();
-        this.featureId = ''
-        this.strategyId = ''
-        this.apiUrl = ''
-    }
+  @property({ attribute: 'feature-id' })
+  featureId: string;
 
-    private showRemoveModal() {
-        this.dialog.open = true;
-    }
+  @property({ attribute: 'strategy-id' })
+  strategyId: string;
 
-    private async deleteStrategy() {
-        await this.save();
-        const event = new Event('state_changed')
-        this.dispatchEvent(event)
+  @property({ attribute: 'api-url' })
+  apiUrl: string;
 
-        this.dialog.open = false;
-    }
+  @query('#remove-toggle-dialog')
+  dialog!: HTMLDialogElement;
 
-    private save() {
-        return fetch(this.apiUrl + '/features/' + this.featureId, {
-            method: 'PATCH',
-            headers: {
-                'content-type': 'application/json',
-            },
-            body: JSON.stringify({
-                action: 'remove_strategy',
-                value: {
-                    strategy_id: this.strategyId
-                }
-            }),
-        })
-    }
+  constructor() {
+    super();
+    this.featureId = '';
+    this.strategyId = '';
+    this.apiUrl = '';
+  }
 
-    render() {
-        return html`
+  private showRemoveModal() {
+    this.dialog.open = true;
+  }
+
+  private async deleteStrategy() {
+    await this.save();
+    const event = new Event('state_changed');
+    this.dispatchEvent(event);
+
+    this.dialog.open = false;
+  }
+
+  private save() {
+    return fetch(`${this.apiUrl}/features/${this.featureId}`, {
+      method: 'PATCH',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        action: 'remove_strategy',
+        value: {
+          strategy_id: this.strategyId,
+        },
+      }),
+    });
+  }
+
+  render() {
+    return html`
             <mwc-button slot="primaryAction" @click="${this.showRemoveModal}">Remove</mwc-button>
             <mwc-dialog id="remove-toggle-dialog" heading="Remove Toggle Strategy" class="styled">
                 <p>Are you sure you want to delete feature ${this.featureId}?</p>
                 <mwc-button slot="primaryAction" @click="${this.deleteStrategy}">Yes, delete it!</mwc-button>
                 <mwc-button slot="secondaryAction" dialogAction="close">Cancel</mwc-button>
             </mwc-dialog>
-        `
-    }
+        `;
+  }
 }

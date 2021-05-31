@@ -1,64 +1,64 @@
-import {html, LitElement} from 'lit';
-import {customElement, property} from 'lit/decorators.js';
+import { html, LitElement } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
 
 @customElement('toggle-switch')
 export class ToggleSwitch extends LitElement {
-    @property({type: String})
-    featureId: String
-    @property({ attribute: 'api-url' })
-    apiUrl: string
-    @property({type: Number})
-    enabled: Number;
+  @property({ type: String })
+  featureId: String;
 
-    constructor() {
-        super();
-        this.apiUrl = '';
-        this.featureId = ''
-        this.enabled = 0
-    }
+  @property({ attribute: 'api-url' })
+  apiUrl: string;
 
-    private enableFeature() {
-        this.enabled = 1;
-        this.save(this.featureId, 'enable_feature')
+  @property({ type: Number })
+  enabled: Number;
 
-    }
+  constructor() {
+    super();
+    this.apiUrl = '';
+    this.featureId = '';
+    this.enabled = 0;
+  }
 
-    private disableFeature() {
-        this.enabled = 0;
-        this.save(this.featureId, 'disable_feature')
-    }
+  private enableFeature() {
+    this.enabled = 1;
+    this.save(this.featureId, 'enable_feature');
+  }
 
-    private save(featureId: String, action: String) {
-        fetch(this.apiUrl + '/features/' + featureId, {
-            method: 'PATCH',
-            headers: {
-                'content-type': 'application/json',
-            },
-            body: JSON.stringify({
-                action: action
-            }),
-        })
-    }
+  private disableFeature() {
+    this.enabled = 0;
+    this.save(this.featureId, 'disable_feature');
+  }
 
-    private renderCheckbox() {
-        if (1 === this.enabled) {
-            return html`
+  private save(featureId: String, action: String) {
+    fetch(`${this.apiUrl}/features/${featureId}`, {
+      method: 'PATCH',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        action,
+      }),
+    });
+  }
+
+  private renderCheckbox() {
+    if (this.enabled === 1) {
+      return html`
                 <mwc-formfield>
                     <mwc-switch checked @click="${this.disableFeature}"></mwc-switch>
                 </mwc-formfield>            
-            `
-        } else {
-            return html`
+            `;
+    }
+    return html`
                 <mwc-formfield>
                     <mwc-switch @click="${this.enableFeature}"></mwc-switch>
                 </mwc-formfield>            
-            `
-        }
-    }
+            `;
+  }
 
-    render() {
-        return html`
+  render() {
+    return html`
             ${this.renderCheckbox()}
-        `
-    }
+        `;
+  }
 }

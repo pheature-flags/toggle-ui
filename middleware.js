@@ -17,14 +17,20 @@ const setStrategy = req => {
     const id = getLastUrlItem(req.url)
 
     let feature = db.features.find(feature => feature.id === id)
-    const hasStrategy = feature.strategies.find(strategy => strategy.id === req.body.value.strategy_id)
+    const hasStrategy = feature.strategies ? feature.strategies.find(strategy => strategy.id === req.body.value.strategy_id) : false
     if (hasStrategy) {
         feature.strategies = feature.strategies.map(strategy => {
             if (req.body.value.strategy_id === strategy.id) {
                 return {
                     id: strategy.id,
                     type: req.body.value.strategy_type,
-                    segments: req.body.value.segments
+                    segments: req.body.value.segments.map(segment => {
+                        return {
+                            id: segment.segment_id,
+                            type: segment.segment_type,
+                            criteria: segment.criteria,
+                        }
+                    })
                 }
             }
 
@@ -34,7 +40,13 @@ const setStrategy = req => {
         feature.strategies.push({
             id: req.body.value.strategy_id,
             type: req.body.value.strategy_type,
-            segments: req.body.value.segments
+            segments: req.body.value.segments.map(segment => {
+                return {
+                    id: segment.segment_id,
+                    type: segment.segment_type,
+                    criteria: segment.criteria,
+                }
+            })
         })
     }
 
