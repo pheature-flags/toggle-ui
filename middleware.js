@@ -17,7 +17,7 @@ const setStrategy = req => {
     const id = getLastUrlItem(req.url)
 
     let feature = db.features.find(feature => feature.id === id)
-    const hasStrategy = feature.strategies ? feature.strategies.find(strategy => strategy.id === req.body.value.strategy_id) : false
+    const hasStrategy = feature ? feature.strategies.find(strategy => strategy.id === req.body.value.strategy_id) : false
     if (hasStrategy) {
         feature.strategies = feature.strategies.map(strategy => {
             if (req.body.value.strategy_id === strategy.id) {

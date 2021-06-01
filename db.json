@@ -14,6 +14,7 @@
       "id": "show_home_dynamic_catalog",
       "strategies": [
         {
+          "id": "is_developer",
           "type": "enable_by_matching_segment",
           "segments": [
             {
@@ -25,6 +26,7 @@
           ]
         },
         {
+          "id": "location",
           "type": "enable_by_matching_segment",
           "segments": [
             {
@@ -53,6 +55,23 @@
       "id": "show_brand_logo",
       "strategies": [],
       "enabled": true
+    },
+    {
+      "id": "test",
+      "enabled": false,
+      "strategies": [
+        {
+          "id": "test1",
+          "type": "enable_by_matching_identity_id",
+          "segments": [
+            {
+              "id": "test",
+              "type": "strict_matching_segment",
+              "criteria": {}
+            }
+          ]
+        }
+      ]
     }
   ]
 }

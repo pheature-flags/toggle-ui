@@ -1,9 +1,12 @@
-import '@material/mwc-dialog';
 import '@material/mwc-button';
-import '@material/mwc-textfield';
-import '@material/mwc-select';
+import '@material/mwc-dialog';
 import '@material/mwc-formfield';
+import '@material/mwc-icon';
+import '@material/mwc-icon-button';
+import '@material/mwc-select';
 import '@material/mwc-switch';
+import '@material/mwc-textfield';
+import '@material/mwc-textarea';
 import './toggle-add';
 import './toggle-add-strategy';
 import './toggle-remove';
@@ -29,7 +32,6 @@ export class ToggleList extends LitElement {
         tr.mdc-data-table__header-row.bg-grey th {
             background-color: #eee;
         }
-
     `;
 
   @property()
@@ -95,6 +97,13 @@ export class ToggleList extends LitElement {
                                         `)}
                                 </td>
                                 <td class="mdc-data-table__cell actions">
+                                    <toggle-add-strategy
+                                            strategy-id="${strategy.id}"
+                                            strategy-type="${strategy.type}"
+                                            api-url="${this.apiUrl}"
+                                            feature-id="${feature.id}"
+                                            @state_changed="${this.updateFeatures}"
+                                    ></toggle-add-strategy>
                                     <toggle-remove-strategy
                                             api-url="${this.apiUrl}"
                                             feature-id="${feature.id}"
@@ -126,7 +135,7 @@ export class ToggleList extends LitElement {
                                 <td class="mdc-data-table__cell actions" colspan="2">
                                     <toggle-add-strategy
                                             api-url="${this.apiUrl}"
-                                            featureId="${feature.id}"
+                                            feature-id="${feature.id}"
                                             @state_changed="${this.updateFeatures}"
                                     ></toggle-add-strategy>
                                     <toggle-remove
@@ -153,7 +162,7 @@ export class ToggleList extends LitElement {
                         <tr class="mdc-data-table__header-row">
                             <th class="mdc-data-table__header-cell" role="columnheader" scope="col"></th>
                             <th class="mdc-data-table__header-cell" role="columnheader">Feature ID</th>
-                            <th class="mdc-data-table__header-cell" role="columnheader">Kill Switch</th>
+                            <th class="mdc-data-table__header-cell" role="columnheader">OFF / ON</th>
                             <th class="mdc-data-table__header-cell actions" role="columnheader" colspan="2">
                                 <toggle-add
                                         api-url="${this.apiUrl}"
