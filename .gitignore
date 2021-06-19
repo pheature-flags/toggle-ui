@@ -1,5 +1,5 @@
-dist/
 node_modules/
+src/**/*.js
 styles/index.css*
 styles/_components.scss
 stats.json
